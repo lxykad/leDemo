@@ -32,7 +32,9 @@ import java.util.UUID;
 import util.ProgressHUD;
 import util.SampleGattAttributes;
 
-
+/**
+ * http://m.2cto.com/kf/201601/486609.html
+ */
 public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
 
     private String TAG = "bledemo";
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         @Override
         public void onServiceDisconnected(ComponentName name) {
             //System.out.println("name666666======service==断开服务连接");
-            
+
             mBluetoothLeService = null;
         }
     };
