@@ -22,7 +22,11 @@
         <service
             android:name=".BluetoothLeService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+        <service
+            android:name=".BleService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

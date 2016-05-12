@@ -26,6 +26,18 @@
         android:text="scan"
         android:textSize="18sp" />
 
+    <Button
+        android:id="@+id/bt_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/bt_scan"
+        android:background="#3f00"
+        android:onClick="openService"
+        android:text="开启服务"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
