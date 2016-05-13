@@ -49,15 +49,23 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     private ArrayList<BluetoothDevice> mList;
     private DeviceAdapter mDeviceAdapter;
 
+
     private BleService.MyBinder mBinder;
+    private BleService mBleService;
     private ServiceConnection mBleConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+
             mBinder = (BleService.MyBinder) service;
+            mBleService = mBinder.getBleService();
+            System.out.println("name666666666=========服务已连接===" + mBleService);
+            mBleService.connectBle();
+
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            System.out.println("name666666666=========服务断开连接====" + mBleService);
             mBinder = null;
         }
     };
@@ -333,6 +341,16 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         final String name = device.getName();
         final String address = device.getAddress();
 
+        //绑定服务
+        Intent intent = new Intent(MainActivity.this, BleService.class);
+        intent.putExtra("ble_service", device);
+        startService(intent);
+        bindService(intent, mBleConnection, BIND_AUTO_CREATE);
+
+        //System.out.println("name6666666666=====bleservice==="+mBleService);
+        //Toast.makeText(MainActivity.this,mBleService.toString(),Toast.LENGTH_SHORT).show();
+
+
 //        if (mBluetoothLeService != null) {
 //            boolean flag = mBluetoothLeService.connect(address);
 //        }
@@ -450,6 +468,14 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        Intent intent = new Intent(MainActivity.this, BleService.class);
+        unbindService(mBleConnection);
+        stopService(intent);
+        mBleService.stopSelf();
+        mBleService = null;
+
+        System.out.println("name666666========关闭mainactivity");
 
     }
 }
