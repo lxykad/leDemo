@@ -25,6 +25,7 @@ public class BleService extends Service {
 
     private MyBinder mBinder;
     private BluetoothDevice mDevice;
+    private BluetoothGatt mGatt;
 
 
     public BleService() {
@@ -84,6 +85,9 @@ public class BleService extends Service {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     //连接成功
                     System.out.println("name66666666========连接设备：" + mDevice.getName() + "成功");
+                    //连接成功后就去找出该设备中的服务
+                    boolean b = gatt.discoverServices();
+
 
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     //连接失败
@@ -97,8 +101,12 @@ public class BleService extends Service {
                 super.onServicesDiscovered(gatt, status);
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     //找到服务
+                    mGatt = gatt;
                     List<BluetoothGattService> list = gatt.getServices();
-                    System.out.println("name666666======servicesize==" + list.size());
+                    System.out.println("name666666======找到服务==" + list.size());
+                    if (list != null && list.size() > 0) {
+                        displayGattServices(list);
+                    }
 
                 }
             }
@@ -117,6 +125,7 @@ public class BleService extends Service {
                 super.onCharacteristicWrite(gatt, characteristic, status);
                 System.out.println("name666666========向设备写数据");
             }
+
             //设备发出通知时会调用到该接口
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
@@ -131,30 +140,26 @@ public class BleService extends Service {
     //解析服务
     private void displayGattServices(List<BluetoothGattService> gattServices) {
         //遍历所有的服务
-        for (BluetoothGattService service : gattServices) {
-
+        for (int i = 0; i < gattServices.size(); i++) {
+            BluetoothGattService service = gattServices.get(i);
             List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
-
-            //遍历每条服务里所有的characteristic
-            for (int i = 0; i < characteristics.size(); i++) {
+            for (int j = 0; j < characteristics.size(); j++) {
                 BluetoothGattCharacteristic characteristic = characteristics.get(i);
-                String s = characteristic.getUuid().toString();
-                //System.out.println("name66666======characteristics===id==" + s);
-                //if (s.equals("00002a06-0000-1000-8000-00805f9b34fb")) {//需要通信的uuid
-                System.out.println("name66666======可以通信的id" + s);
-                BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                        UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-//
-                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//                mGatt.writeDescriptor(descriptor);
-//                mGatt.readCharacteristic(characteristic);
+                String uuid = characteristic.getUuid().toString();
+                System.out.println("name6666666==========uuid=====" + uuid);
 
+                //if (uuid.equals("00002a05-0000-1000-8000-00805f9b34fb")) {//需要通信的uuid
+                    BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+                            UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                    mGatt.writeDescriptor(descriptor);
                 //}
+
+
             }
+
         }
     }
-
-
 
 
     class MyBinder extends Binder {
