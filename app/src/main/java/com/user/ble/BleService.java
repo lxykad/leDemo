@@ -25,7 +25,7 @@ public class BleService extends Service {
 
     private MyBinder mBinder;
     private BluetoothDevice mDevice;
-    private BluetoothGatt mGatt;
+    private BluetoothGatt mBluetoothGatt;
 
 
     public BleService() {
@@ -99,11 +99,12 @@ public class BleService extends Service {
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 super.onServicesDiscovered(gatt, status);
+                //gatt.writeCharacteristic(new BluetoothGattCharacteristic(UUID.fromString("0000-1000-8000-00805f9b34fb"),020,BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT));
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     //找到服务
-                    mGatt = gatt;
+                    mBluetoothGatt = gatt;
                     List<BluetoothGattService> list = gatt.getServices();
-                    System.out.println("name666666======找到服务==" + list.size());
+                    System.out.println("name666666======找到服务==" + list.size());//4组 8个服务
                     if (list != null && list.size() > 0) {
                         displayGattServices(list);
                     }
@@ -114,7 +115,7 @@ public class BleService extends Service {
             //当读取设备时会回调该函数
             @Override
             public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                super.onCharacteristicRead(gatt, characteristic, status);
+                //super.onCharacteristicRead(gatt, characteristic, status);
                 System.out.println("name666666========读取设备时数据");
 
             }
@@ -122,14 +123,14 @@ public class BleService extends Service {
             //当向设备Descriptor中写数据时，会回调该函数
             @Override
             public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                super.onCharacteristicWrite(gatt, characteristic, status);
+                //super.onCharacteristicWrite(gatt, characteristic, status);
                 System.out.println("name666666========向设备写数据");
             }
 
             //设备发出通知时会调用到该接口
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                super.onCharacteristicChanged(gatt, characteristic);
+                //super.onCharacteristicChanged(gatt, characteristic);
                 System.out.println("name666666========设备发出通知");
             }
         });
@@ -139,28 +140,72 @@ public class BleService extends Service {
 
     //解析服务
     private void displayGattServices(List<BluetoothGattService> gattServices) {
-        //遍历所有的服务
-        for (int i = 0; i < gattServices.size(); i++) {
+        //遍历所有的服务  list.size = 8;
+        int size = gattServices.size();
+        for (int i = 0; i < size; i++) {
+
             BluetoothGattService service = gattServices.get(i);
-            List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
-            for (int j = 0; j < characteristics.size(); j++) {
-                BluetoothGattCharacteristic characteristic = characteristics.get(i);
-                String uuid = characteristic.getUuid().toString();
-                System.out.println("name6666666==========uuid=====" + uuid);
+            String uuidString = service.getUuid().toString();//4组uuid
 
-                //if (uuid.equals("00002a05-0000-1000-8000-00805f9b34fb")) {//需要通信的uuid
-                    BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                            UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-                    descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                    mGatt.writeDescriptor(descriptor);
-                //}
+            if (uuidString.equals("0000fff0-0000-1000-8000-00805f9b34fb")) {
+                System.out.println("name6666666==========通讯的uuid");
+
+                List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
+
+                int num = characteristics.size();//10
 
 
+                for (int j = 0; j < num; j++) {
+
+                    BluetoothGattCharacteristic mCharacteristic = characteristics.get(j);
+                    String uuid = mCharacteristic.getUuid().toString();
+                    if("0000fff3-0000-1000-8000-00805f9b34fb".equals(uuid)){
+                        System.out.println("name6666666==========wirte8888888");
+                        boolean b = mBluetoothGatt.setCharacteristicNotification(mCharacteristic, true);
+                        System.out.println("name6666666==========Notification==="+b);
+
+                        byte[] dataToWrite = parseHexStringToBytes("886");
+                        writeDataToCharacteristic(mCharacteristic, dataToWrite);
+
+//                        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
+//                                UUID.fromString(SampleGattAttributes.WRITE_UUID));
+//
+//                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//                        mBluetoothGatt.writeDescriptor(descriptor);
+
+                    }
+
+                }
             }
 
         }
     }
 
+    public byte[] parseHexStringToBytes(final String hex) {
+        String tmp = hex.substring(2).replaceAll("[^[0-9][a-f]]", "");
+        byte[] bytes = new byte[tmp.length() / 2]; // every two letters in the string are one byte finally
+
+        String part = "";
+
+        for(int i = 0; i < bytes.length; ++i) {
+            part = "0x" + tmp.substring(i*2, i*2+2);
+            bytes[i] = Long.decode(part).byteValue();
+        }
+
+        return bytes;
+    }
+
+    public void writeDataToCharacteristic(final BluetoothGattCharacteristic ch, final byte[] dataToWrite) {
+        System.out.println("name6666666==========wirte222222");
+        if ( mBluetoothGatt == null || ch == null) return;
+
+        // first set it locally....
+        ch.setValue(dataToWrite);
+        // ... and then "commit" changes to the peripheral
+        mBluetoothGatt.writeCharacteristic(ch);
+
+        System.out.println("name6666666==========wirte33333");
+    }
 
     class MyBinder extends Binder {
 

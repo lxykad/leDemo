@@ -142,98 +142,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
                     mDeviceAdapter.clearItems();
                     mDeviceAdapter.addItems(mList);
                 }
-
-                // && "MI1S".equals(name)
-//                if (name != null && !name.equals("")) {
-//                    String address = device.getAddress();
-//                    ParcelUuid[] uuids = device.getUuids();
-//                    System.out.println("name666666======address==" + address);//  C8:0F:10:27:71:46
-//                    //System.out.println("name666666======uuid==" + uuids);//null
-//                    device.connectGatt(MainActivity.this, true, new BluetoothGattCallback() {
-//                        @Override//当连接上设备或者失去连接时会回调该方法
-//                        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-//                            super.onConnectionStateChange(gatt, status, newState);
-//                            if (newState == BluetoothProfile.STATE_CONNECTED) { //连接成功
-//                                //连接成功后就去找出该设备中的服务
-//                                boolean b = gatt.discoverServices();
-//                                //Toast.makeText(MainActivity.this,"成功连接"+device.getName(),Toast.LENGTH_SHORT).show();
-//                                List<BluetoothGattService> services = gatt.getServices();
-//                                System.out.println("name666666======service==" + b);
-//                            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {  //连接失败
-//                                Toast.makeText(MainActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        //当设备是否找到服务时，会回调该函数
-//                        @Override
-//                        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-//                            super.onServicesDiscovered(gatt, status);
-//                            if (status == BluetoothGatt.GATT_SUCCESS) { //找到服务了
-//                                mGatt = gatt;
-//                                System.out.println("name666666======findservice==");
-//                                //解析服务
-//                                List<BluetoothGattService> list = gatt.getServices();
-//                                System.out.println("name666666======servicesize==" + list.size());
-//                                if (list != null && list.size() > 0) {
-//
-//                                    displayGattServices(list);
-//                                }
-////                                for(int i = 0;i<list.size();i++){
-////                                    BluetoothGattService service = list.get(i);
-////                                    System.out.println("name666666======service-id=="+service.getUuid());
-////                                }
-//
-//                            } else {
-//
-//                            }
-//                        }
-//
-//                        //当读取设备时会回调该函数
-//                        @Override
-//                        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-//                            super.onCharacteristicRead(gatt, characteristic, status);
-//                            if (status == BluetoothGatt.GATT_SUCCESS) {
-//                                System.out.println("name666666======service==读取设备数据");
-//                                //读取到的数据存在characteristic当中，可以通过characteristic.getValue();函数取出。
-//                                byte[] bytes = characteristic.getValue();
-//
-//
-//                            }
-//                        }
-//
-//                        //当向设备Descriptor中写数据时，会回调该函数
-//                        @Override
-//                        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-//                            super.onDescriptorWrite(gatt, descriptor, status);
-//                        }
-//
-//                        //设备发出通知时会调用到该接口
-//                        @Override
-//                        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-//                            super.onCharacteristicChanged(gatt, characteristic);
-//                            if (characteristic.getValue() != null) {
-//                                System.out.println("name666666======service-notice==" + characteristic.getStringValue(0));
-//                            }
-//                            System.out.println("--------onCharacteristicChanged-----");
-//                        }
-//
-//                        //
-//                        @Override
-//                        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-//                            super.onReadRemoteRssi(gatt, rssi, status);
-//                        }
-//
-//                        //当向Characteristic写数据时会回调该函数
-//                        @Override
-//                        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-//                            super.onCharacteristicWrite(gatt, characteristic, status);
-//                        }
-//
-//                    });
-//                    mAdapter.stopLeScan(mLeCallback);
-//
-//                }
-
             }
         };
     }
@@ -263,10 +171,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
      */
     public void beginScan(View view) {
         scanLeDevice(true);
-
-//        mAdapter.stopLeScan(mLeCallback);
-//        boolean b = mAdapter.startLeScan(mLeCallback);
-//        System.out.println("bbbbbbbbb======" + b);
 
     }
 
