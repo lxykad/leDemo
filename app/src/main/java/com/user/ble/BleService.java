@@ -131,7 +131,12 @@ public class BleService extends Service {
             @Override
             public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
                 //super.onCharacteristicChanged(gatt, characteristic);
-                System.out.println("name666666========设备发出通知");
+                byte[] value = characteristic.getValue();
+                String data = value[0] + "";
+                //上 68    下 85  sos 83  ptt 80 FM 2
+                System.out.println("name666666========长度=====" + value.length);
+                System.out.println("name666666========设备发出通知=====" + data);
+
             }
         });
 
@@ -159,19 +164,13 @@ public class BleService extends Service {
 
                     BluetoothGattCharacteristic mCharacteristic = characteristics.get(j);
                     String uuid = mCharacteristic.getUuid().toString();
-                    if("0000fff3-0000-1000-8000-00805f9b34fb".equals(uuid)){
+                    if ("0000fff3-0000-1000-8000-00805f9b34fb".equals(uuid)) {
                         System.out.println("name6666666==========wirte8888888");
                         boolean b = mBluetoothGatt.setCharacteristicNotification(mCharacteristic, true);
-                        System.out.println("name6666666==========Notification==="+b);
+                        System.out.println("name6666666==========Notification===" + b);
 
-                        byte[] dataToWrite = parseHexStringToBytes("886");
+                        byte[] dataToWrite = parseHexStringToBytes("8865");
                         writeDataToCharacteristic(mCharacteristic, dataToWrite);
-
-//                        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-//                                UUID.fromString(SampleGattAttributes.WRITE_UUID));
-//
-//                        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//                        mBluetoothGatt.writeDescriptor(descriptor);
 
                     }
 
@@ -187,8 +186,8 @@ public class BleService extends Service {
 
         String part = "";
 
-        for(int i = 0; i < bytes.length; ++i) {
-            part = "0x" + tmp.substring(i*2, i*2+2);
+        for (int i = 0; i < bytes.length; ++i) {
+            part = "0x" + tmp.substring(i * 2, i * 2 + 2);
             bytes[i] = Long.decode(part).byteValue();
         }
 
@@ -197,7 +196,7 @@ public class BleService extends Service {
 
     public void writeDataToCharacteristic(final BluetoothGattCharacteristic ch, final byte[] dataToWrite) {
         System.out.println("name6666666==========wirte222222");
-        if ( mBluetoothGatt == null || ch == null) return;
+        if (mBluetoothGatt == null || ch == null) return;
 
         // first set it locally....
         ch.setValue(dataToWrite);

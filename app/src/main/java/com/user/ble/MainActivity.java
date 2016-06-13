@@ -71,26 +71,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
     };
 
 
-//    private BluetoothLeService mBluetoothLeService;
-//    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            //从BluetoothLeService中获取的对象
-//            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
-//            if (!mBluetoothLeService.initialize()) {
-//                finish();
-//            }
-//
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            //System.out.println("name666666======service==断开服务连接");
-//
-//            mBluetoothLeService = null;
-//        }
-//    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
             for (int i = 0; i < characteristics.size(); i++) {
                 BluetoothGattCharacteristic characteristic = characteristics.get(i);
                 String s = characteristic.getUuid().toString();
-                //System.out.println("name66666======characteristics===id==" + s);
                 //if (s.equals("00002a06-0000-1000-8000-00805f9b34fb")) {//需要通信的uuid
                 System.out.println("name66666======可以通信的id" + s);
                 BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
@@ -251,117 +230,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
         startService(intent);
         bindService(intent, mBleConnection, BIND_AUTO_CREATE);
 
-        //System.out.println("name6666666666=====bleservice==="+mBleService);
-        //Toast.makeText(MainActivity.this,mBleService.toString(),Toast.LENGTH_SHORT).show();
-
-
-//        if (mBluetoothLeService != null) {
-//            boolean flag = mBluetoothLeService.connect(address);
-//        }
-
-
-        //ProgressHUD.showLoding(MainActivity.this);
-
-//        device.connectGatt(MainActivity.this, true, new BluetoothGattCallback() {
-//            @Override
-//            public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-//                super.onConnectionStateChange(gatt, status, newState);
-//                if (newState == BluetoothProfile.STATE_CONNECTED) {
-//                    //连接成功
-//                    //连接成功后就去找出该设备中的服务
-//                    MainActivity.this.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //ProgressHUD.hidden();
-//                            //ProgressHUD.show(MainActivity.this, "设备" + name + "连接成功");
-//                        }
-//                    });
-//                    boolean b = gatt.discoverServices();
-//
-//                    List<BluetoothGattService> services = gatt.getServices();
-//                    System.out.println("name666666======service==" + b);
-//                    System.out.println("name666666======name==" + name);
-//
-//
-//                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {  //连接失败
-//                    //ProgressHUD.hidden();
-//                    //ProgressHUD.show(MainActivity.this,"设备"+name+"连接失败");
-//                }
-//            }
-//
-//            @Override
-//            public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-//                super.onServicesDiscovered(gatt, status);
-//
-//                if (status == BluetoothGatt.GATT_SUCCESS) { //找到服务了
-//                    mGatt = gatt;
-//                    //解析服务
-//                    List<BluetoothGattService> list = gatt.getServices();
-//                    System.out.println("name666666======servicesize==" + list.size());
-//                    if (list != null && list.size() > 0) {
-//
-//                        displayGattServices(list);
-//                    }
-//                    for (int i = 0; i < list.size(); i++) {
-//                        BluetoothGattService service = list.get(i);
-//                        //System.out.println("name666666======service-id==" + service.getUuid());
-//                    }
-//
-//                } else {
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-//                super.onCharacteristicRead(gatt, characteristic, status);
-//
-//            }
-//
-//            @Override
-//            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-//                super.onCharacteristicWrite(gatt, characteristic, status);
-//            }
-//
-//            @Override
-//            public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-//                super.onCharacteristicChanged(gatt, characteristic);
-//            }
-//
-//            //读取ble设备数据时回调
-//            @Override
-//            public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-//                super.onDescriptorRead(gatt, descriptor, status);
-//
-//                if (status == BluetoothGatt.GATT_SUCCESS) {
-//                    System.out.println("name666666======service==读取设备数据");
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-//                super.onDescriptorWrite(gatt, descriptor, status);
-//            }
-//
-//            @Override
-//            public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
-//                super.onReliableWriteCompleted(gatt, status);
-//            }
-//
-//            @Override
-//            public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-//                super.onReadRemoteRssi(gatt, rssi, status);
-//            }
-//
-//            @Override
-//            public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
-//                super.onMtuChanged(gatt, mtu, status);
-//            }
-//        });
     }
-
 
     //设置可读的uuid
 
